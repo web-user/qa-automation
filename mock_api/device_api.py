@@ -58,6 +58,15 @@ def stop_recording(id):
 	# Ensure the directory exists
 	os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
+	# Динамічний розмір файлу на основі тривалості запису
+	duration_seconds = timestamp_end - timestamp_start  # Розрахунок тривалості запису в секундах
+	bytes_per_second = 500000  # Наприклад, 500KB/с
+	file_size = duration_seconds * bytes_per_second  # Розмір файлу залежить від тривалості
+
+	# Створюємо фіктивний файл для тесту з динамічним розміром
+	with open(file_path, 'wb') as f:
+		f.write(b"\x00" * file_size)  # Створюємо файл з розміром на основі тривалості запису
+
 	recording_files.append(file_path)
 	return jsonify({"status": "recording stopped", "file": file_path}), 200
 
